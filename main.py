@@ -50,7 +50,52 @@ def main(page: ft.Page):
         conceptspagenext.visible = False
         taskspage.visible = False
         profilepage.visible = True
+        update_profile()
         page.update()
+
+    def update_profile():
+        progress_bars = ft.Column(
+            [
+                ft.Row(
+                    [
+                        ft.Stack(
+                            [
+                                ft.Container(
+                                    ft.Text(
+                                        f"{score / len(tasks) * 100}% {concepts[i][0]}",
+                                        font_family="Aclonica",
+                                        color=ft.colors.with_opacity(1, "#F0ECFB"),
+                                        size=24
+                                    ),
+                                    width=328,
+                                    height=70,
+                                    bgcolor=ft.colors.with_opacity(1, "#D9D9D9"),
+                                    border_radius=15,
+                                    alignment=ft.alignment.center,
+                                ),
+                                ft.Container(
+                                    # ft.Text(
+                                    #     f"{score / len(tasks) * 100}%",
+                                    #     font_family="Aclonica",
+                                    #     color=ft.colors.with_opacity(1, "#F0ECFB"),
+                                    #     size=24
+                                    # ),
+                                    ft.Text(''),
+                                    width=328 * ((score) / len(tasks)),
+                                    height=70,
+                                    bgcolor=ft.colors.with_opacity(1, "#825EEB"),
+                                    border_radius=15,
+                                    alignment=ft.alignment.center
+                                )
+                            ]
+                        )
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER
+                )
+                for i in range(len(concepts))
+            ]
+        )
+        profilepage.controls[-1].controls[-1] = progress_bars
 
     def changing_pages(e):
         road_map = {
@@ -616,24 +661,24 @@ def main(page: ft.Page):
                 margin=0,
                 border_radius=ft.BorderRadius(bottom_right=15, bottom_left=15, top_right=0, top_left=0)
             ),
-            ft.ResponsiveRow(
+            ft.Column(
                 [
-                    ft.Row(
+                    ft.ResponsiveRow(
                         [
-                            ft.Text(
-                                "Profile",
-                                font_family="Aclonica",
-                                size=30,
-                                color=ft.colors.with_opacity(1, "#F0ECFB")
+                            ft.Row(
+                                [
+                                    ft.Text(
+                                        "Profile",
+                                        font_family="Aclonica",
+                                        size=30,
+                                        color=ft.colors.with_opacity(1, "#F0ECFB")
+                                    ),
+                                ],
+                                alignment=ft.MainAxisAlignment.CENTER
                             ),
                         ],
-                        alignment=ft.MainAxisAlignment.CENTER
                     ),
-                ],
-            ),
-            ft.Row(
-                [
-                    ft.Column(
+                    ft.Row(
                         [
                             ft.Container(
                                 ft.Image(
@@ -648,23 +693,68 @@ def main(page: ft.Page):
                                 border_radius=100,
                                 margin=ft.margin.only(top=36),
                                 bgcolor=ft.colors.with_opacity(1, "#D9D9D9"),
-                            ),
+                            )
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER
+                    ),
+                    ft.Row(
+                        [
                             ft.Container(
                                 ft.Text(
                                     f"{username}",
                                     font_family="Aclonica",
                                     size=25,
-                                    color=ft.colors.with_opacity(1, "#F0ECFB")
+                                    color=ft.colors.with_opacity(1, "#F0ECFB"),
+                                    text_align=ft.MainAxisAlignment.CENTER
                                 ),
+                                alignment=ft.alignment.center
                             )
                         ],
                         alignment=ft.MainAxisAlignment.CENTER
-                    )
-                    
-                ],
-                alignment=ft.MainAxisAlignment.CENTER
+                    ),
+                    ft.Row(
+                        [
+                            ft.Stack(
+                                [
+                                    ft.Container(
+                                        ft.Text(
+                                            f"{score / len(tasks) * 100}%",
+                                            font_family="Aclonica",
+                                            color=ft.colors.with_opacity(1, "#F0ECFB"),
+                                            size=24
+                                        ),
+                                        width=328,
+                                        height=70,
+                                        bgcolor=ft.colors.with_opacity(1, "#D9D9D9"),
+                                        border_radius=15,
+                                        alignment=ft.alignment.center,
+                                    ),
+                                    ft.Container(
+                                        # ft.Text(
+                                        #     f"{score / len(tasks) * 100}%",
+                                        #     font_family="Aclonica",
+                                        #     color=ft.colors.with_opacity(1, "#F0ECFB"),
+                                        #     size=24
+                                        # ),
+                                        ft.Text(''),
+                                        width=328 * (score / len(tasks)),
+                                        height=70,
+                                        bgcolor=ft.colors.with_opacity(1, "#825EEB"),
+                                        border_radius=15,
+                                        alignment=ft.alignment.center
+                                    )
+                                ]
+                            )
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER
+                    ),
+                ]
             ),
-            
+            # ft.ResponsiveRow(
+            #     [
+            #         ft.Column
+            #     ]
+            # )
         ],
         visible=False,
         width=page.window_max_width,
