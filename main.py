@@ -10,6 +10,8 @@ username = "Makhambet"
 concepts_status = 0
 homepage_status = 0
 current_task = 0
+score = 0
+errors = 0
 
 
 def main(page: ft.Page):
@@ -59,14 +61,29 @@ def main(page: ft.Page):
         road_map[e.control.selected_index](e)
 
     def correct_choice(e):
+        global score_label
         global current_task
+        global score
+        score += 1
+        score_label.content = ft.Text(
+            f"Score: {score}",
+            font_family="Aclonica"
+        )
         current_task += 1
         current_task %= len(tasks)
         open_close_tasks(e, 0)
         page.update()
 
     def wrong_choice(e):
-        pass
+        global errors
+        errors += 1
+        errors_label.controls = [
+            ft.Text(
+                f"Errors: {errors}",
+                font_family="Aclonica"
+            )
+        ]
+        page.update()
 
     def choose_answer(e, ans):
         if ans == tasks[current_task][5]:
@@ -298,89 +315,120 @@ def main(page: ft.Page):
         concepts_status += 1
         change_conceptspage(e)
 
-    def open_new_concept(e, num):
+    def return_concept_cards(concept):
+        return [
+            ft.Row(
+                [
+                    ft.Container(
+                        ft.Text(
+                            f"{concepts[concept][2][i]}",
+                            font_family="Aclonica"
+                        ),
+                        width=241,
+                        height=40,
+                        border_radius=7,
+                        bgcolor=ft.colors.with_opacity(1, "#BBA8F3"),
+                        alignment=ft.alignment.center
+                    )
+                ],
+                alignment=ft.MainAxisAlignment.CENTER
+            ) for i in range(len(concepts[concept][2]))
+        ]
+
+    def open_new_concept(e, concept):
+        concept_view = ft.Container(
+            ft.Row(
+                [
+                    ft.Container(
+                        ft.Column(
+                            [
+                                ft.Row(
+                                    [
+                                        ft.Text(
+                                            f"{concepts[concept][0]}",
+                                            size=36,
+                                            font_family="Aclonica",
+                                            color=ft.colors.with_opacity(1, "#F0ECFB")
+                                        ),
+                                    ],
+                                    alignment=ft.MainAxisAlignment.CENTER,
+                                ),
+                                ft.Row(
+                                    [
+                                        ft.Text(
+                                            f"{concepts[concept][1]}",
+                                            font_family="Aclonica",
+                                        ),
+                                    ],
+                                    alignment=ft.MainAxisAlignment.CENTER,
+                                ),
+                                # ft.Text(
+                                #     f"Concept {num} is a concept about {num}",
+                                #     font_family="Aclonica",
+                                # ),
+                                # ft.Text(
+                                #     f"{num}",
+                                #     font_family="Aclonica"
+                                # )
+                            ] + return_concept_cards(concept)
+                        ),
+                        # left=21,
+                        # top=108,
+                        height=576,
+                        width=328,
+                        bgcolor=ft.colors.with_opacity(0.9, "#825EEB"),
+                        border_radius=15
+                    )
+                ],
+                alignment=ft.MainAxisAlignment.CENTER
+            ),
+            margin=ft.margin.only(top=120)
+        )
         conceptspagenext.controls.append(
-            ft.Container(
-                ft.Row(
-                    [
-                        ft.Container(
-                            ft.Column(
-                                [
-                                    ft.Row(
-                                        [
-                                            ft.Text(
-                                                f"{concepts[num][0]}",
-                                                size=36,
-                                                font_family="Aclonica",
-                                                color=ft.colors.with_opacity(1, "#F0ECFB")
-                                            ),
-                                        ],
-                                        alignment=ft.MainAxisAlignment.CENTER,
-                                    ),
-                                    ft.Row(
-                                        [
-                                            ft.Text(
-                                                f"{concepts[num][1]}",
-                                                font_family="Aclonica",
-                                            ),
-                                        ],
-                                        alignment=ft.MainAxisAlignment.CENTER,
-                                    ),
-                                    ft.Row(
-                                        [
-                                            ft.Container(
-                                                ft.Text(
-                                                    f"{concepts[num][2]}",
-                                                    font_family="Aclonica"
-                                                ),
-                                                width=241,
-                                                height=40,
-                                                border_radius=7,
-                                                bgcolor=ft.colors.with_opacity(1, "#BBA8F3"),
-                                                alignment=ft.alignment.center
-                                            )
-                                        ],
-                                        alignment=ft.MainAxisAlignment.CENTER
-                                    ),
-                                    ft.Text(
-                                        f"{concepts[num][2]}",
-                                        font_family="Aclonica",
-                                    )
-                                    # ft.Text(
-                                    #     f"Concept {num} is a concept about {num}",
-                                    #     font_family="Aclonica",
-                                    # ),
-                                    # ft.Text(
-                                    #     f"{num}",
-                                    #     font_family="Aclonica"
-                                    # )
-                                ]
-                            ),
-                            # left=21,
-                            # top=108,
-                            height=576,
-                            width=328,
-                            bgcolor=ft.colors.with_opacity(0.9, "#825EEB"),
-                            border_radius=15
-                        )
-                    ],
-                    alignment=ft.MainAxisAlignment.CENTER
-                ),
-                margin=ft.margin.only(top=120)
-            )
-            
-            # ft.Container(
-            #     ft.Text(
-            #         f"Concept {num} is a concept about ABOBA",
-            #     ),
-            #     margin=100,
-            # )
+            concept_view
         )
         open_close_concepts(e)
 
     def close_concept(e):
         conceptspagenext.controls.pop(-1)
         open_close_concepts(e)
+
+    def return_concept_button(concept):
+        return ft.Container(
+                ft.ElevatedButton(
+                    content=ft.Text(
+                        f"{concepts[concept][0]}",
+                        font_family="Aclonica"
+                    ),
+                    on_click=lambda e: open_new_concept(e, concept),
+                    width=328,
+                    height=88,
+                    style=ft.ButtonStyle(
+                        color={
+                            ft.MaterialState.HOVERED: ft.colors.WHITE,
+                            ft.MaterialState.DEFAULT: ft.colors.with_opacity(1, "#F0ECFB"),
+                        },
+                        bgcolor={
+                            ft.MaterialState.HOVERED: ft.colors.with_opacity(1, "#6F56BB"),
+                            "": ft.colors.with_opacity(0.9, "#8765EC")
+                        },
+                        padding={ft.MaterialState.HOVERED: 20},
+                        overlay_color=ft.colors.TRANSPARENT,
+                        elevation={"pressed": 0, "": 1},
+                        animation_duration=500,
+                        side={
+                            ft.MaterialState.DEFAULT: ft.BorderSide(1, ft.colors.BLUE),
+                            ft.MaterialState.HOVERED: ft.BorderSide(2, ft.colors.BLUE),
+                        },
+                        shape={
+                            ft.MaterialState.HOVERED: ft.RoundedRectangleBorder(radius=15),
+                            ft.MaterialState.DEFAULT: ft.RoundedRectangleBorder(radius=15),
+                        },
+                    ),
+
+                ),
+            ) 
+
 
     page.navigation_bar = ft.CupertinoNavigationBar(
         bgcolor=ft.colors.AMBER_100,
@@ -436,6 +484,25 @@ def main(page: ft.Page):
         width=page.window_max_width,
         height=page.window_max_height,
     )
+    global score_label
+    score_label = ft.Container(
+            ft.Text(
+            f"Score: {score}",
+            font_family="Aclonica"
+        )
+    )
+
+    global errors_label
+    errors_label = ft.Row(
+        [
+            ft.Text(
+                f"Errors: {errors}",
+                font_family="Aclonica"
+            ),
+        ],
+        alignment=ft.MainAxisAlignment.END
+    )
+    
     taskspage = ft.Stack(
         [
             ft.Container(
@@ -454,12 +521,18 @@ def main(page: ft.Page):
                         )
                     ]
                 ),
-            )
+            ),
+            score_label,
+            errors_label
         ],
         visible=False,
         width=page.window_max_width,
         height=page.window_max_height,
     )
+    concept_buttons = [
+        return_concept_button(i) for i in range(len(concepts))
+    ] 
+
     conceptspage = ft.Stack(
         [
             ft.Container(
@@ -487,76 +560,7 @@ def main(page: ft.Page):
                         ft.Row(
                             [
                                 ft.Column(
-                                    [
-                                        ft.Container(
-                                            ft.ElevatedButton(
-                                                content=ft.Text(
-                                                    "CONCEPT1",
-                                                    font_family="Aclonica"
-                                                ),
-                                                on_click=lambda e: open_new_concept(e, 1),
-                                                width=328,
-                                                height=88,
-                                                style=ft.ButtonStyle(
-                                                    color={
-                                                        ft.MaterialState.HOVERED: ft.colors.WHITE,
-                                                        ft.MaterialState.DEFAULT: ft.colors.with_opacity(1, "#F0ECFB"),
-                                                    },
-                                                    bgcolor={
-                                                        ft.MaterialState.HOVERED: ft.colors.with_opacity(1, "#6F56BB"),
-                                                        "": ft.colors.with_opacity(0.9, "#8765EC")
-                                                    },
-                                                    padding={ft.MaterialState.HOVERED: 20},
-                                                    overlay_color=ft.colors.TRANSPARENT,
-                                                    elevation={"pressed": 0, "": 1},
-                                                    animation_duration=500,
-                                                    side={
-                                                        ft.MaterialState.DEFAULT: ft.BorderSide(1, ft.colors.BLUE),
-                                                        ft.MaterialState.HOVERED: ft.BorderSide(2, ft.colors.BLUE),
-                                                    },
-                                                    shape={
-                                                        ft.MaterialState.HOVERED: ft.RoundedRectangleBorder(radius=15),
-                                                        ft.MaterialState.DEFAULT: ft.RoundedRectangleBorder(radius=15),
-                                                    },
-                                                ),
-                            
-                                            ),
-                                        ),
-                                        ft.Container(
-                                            ft.ElevatedButton(
-                                                content=ft.Text(
-                                                    "CONCEPT2",
-                                                    font_family="Aclonica"
-                                                ),
-                                                # "CONCEPT2",
-                                                on_click=lambda e: open_new_concept(e, 2),
-                                                width=328,
-                                                height=88,
-                                                style=ft.ButtonStyle(
-                                                    color={
-                                                        ft.MaterialState.HOVERED: ft.colors.WHITE,
-                                                        ft.MaterialState.DEFAULT: ft.colors.with_opacity(1, "#F0ECFB"),
-                                                    },
-                                                    bgcolor={
-                                                        ft.MaterialState.HOVERED: ft.colors.with_opacity(1, "#6F56BB"),
-                                                        "": ft.colors.with_opacity(0.9, "#8765EC")
-                                                    },
-                                                    padding={ft.MaterialState.HOVERED: 20},
-                                                    overlay_color=ft.colors.TRANSPARENT,
-                                                    elevation={"pressed": 0, "": 1},
-                                                    animation_duration=500,
-                                                    side={
-                                                        ft.MaterialState.DEFAULT: ft.BorderSide(1, ft.colors.BLUE),
-                                                        ft.MaterialState.HOVERED: ft.BorderSide(2, ft.colors.BLUE),
-                                                    },
-                                                    shape={
-                                                        ft.MaterialState.HOVERED: ft.RoundedRectangleBorder(radius=15),
-                                                        ft.MaterialState.DEFAULT: ft.RoundedRectangleBorder(radius=15),
-                                                    },
-                                                ),
-                                            ),
-                                        ),
-                                    ]
+                                    concept_buttons
                                 )
                             ],
                             alignment=ft.MainAxisAlignment.CENTER,

@@ -21,15 +21,36 @@ import random
 
 tasks = [[[f"Concept {i}", f"Task {i}"], f"A{i}", f"B{i}", f"C{i}", f"D{i}", random.choice(range(1, 5))] for i in range(100)]
 
-concepts = {
-    1: [
-        "Formula",
-        "BASICUS FORMULASE",
-        "CONTENTUSE ESTANOSE"
+concepts = [
+    [
+        "Formulas",
+        "Basice Formulas",
+        [
+            "list of cards"
+        ]
     ],
-    2: [
-        "Trigonometriese",
-        "BASICUS TRIGONOMETRIUS",
-        "CONTENTUSE TRIGONOMETRIUSE"
-    ]
-}
+    [
+        "Trigonometry",
+        "Trigonometriesesbabe",
+        [
+            "list of cdasasdasdasards",
+            "formula1",
+            "formula2"
+        ]
+    ],
+]
+
+# concepts = {
+#     "Formulas": [
+#         "Formula",
+#         "BASICUS FORMULASE",
+#         [
+#             "list of cards"
+#         ]
+#     ],
+#     "Trigonometry": [
+#         "Trigonometriese",
+#         "BASICUS TRIGONOMETRIUS",
+#         "CONTENTUSE TRIGONOMETRIUSE"
+#     ]
+# }
