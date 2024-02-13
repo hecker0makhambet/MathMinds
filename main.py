@@ -62,6 +62,7 @@ def main(page: ft.Page):
         global current_task
         current_task += 1
         current_task %= len(tasks)
+        open_close_tasks(e, 0)
         page.update()
 
     def wrong_choice(e):
@@ -89,205 +90,205 @@ def main(page: ft.Page):
             )
             page.update()
 
-    def open_close_tasks(e):
+    def open_close_tasks(e, num):
         global homepage_status
-        homepage_status += 1
+        homepage_status += num
         if homepage_status % 2 == 0:
             taskspage.controls.pop(-1)
         else:
-            taskspage.controls.append(
-                ft.Container(
-                    ft.Row(
-                        [
-                            ft.Container(
-                                ft.Column(
-                                    [
-                                        ft.Container(
-                                            ft.ElevatedButton(
-                                                "Get back to home",
-                                                on_click=open_close_tasks,
-                                            )
+            tasks_view = ft.Container(
+                ft.Row(
+                    [
+                        ft.Container(
+                            ft.Column(
+                                [
+                                    ft.Container(
+                                        ft.ElevatedButton(
+                                            "Get back to home",
+                                            on_click=lambda e: open_close_tasks(e, 1),
+                                        )
+                                    ),
+                                    ft.Container(
+                                        ft.Text(
+                                            f"{tasks[current_task][0][0]}",
+                                            font_family="Aclonica",
+                                            color=ft.colors.with_opacity(1, "#FFFFFF"),
+                                            size=36
                                         ),
-                                        ft.Container(
-                                            ft.Text(
-                                                f"{tasks[current_task][0][0]}",
-                                                font_family="Aclonica",
-                                                color=ft.colors.with_opacity(1, "#FFFFFF"),
-                                                size=36
-                                            ),
-                                            alignment=ft.alignment.center
+                                        alignment=ft.alignment.center
+                                    ),
+                                    ft.Container(
+                                        ft.Text(
+                                            f"{tasks[current_task][0][1]}",
+                                            font_family="Aclonica",
+                                            color=ft.colors.with_opacity(1, "#FFFFFF"),
+                                            size=24
                                         ),
-                                        ft.Container(
-                                            ft.Text(
-                                                f"{tasks[current_task][0][1]}",
-                                                font_family="Aclonica",
-                                                color=ft.colors.with_opacity(1, "#FFFFFF"),
-                                                size=24
-                                            ),
-                                            alignment=ft.alignment.center
-                                        ),
-                                        ft.Container(
-                                            ft.Row(
-                                                [
-                                                    ft.ElevatedButton(
-                                                        f"{tasks[current_task][1]}",
-                                                        on_click=lambda e: choose_answer(e, 1),
-                                                        width=210,
-                                                        height=40,
-                                                        style=ft.ButtonStyle(
-                                                            color={
-                                                                ft.MaterialState.HOVERED: ft.colors.with_opacity(1, "#FFFFFF"),
-                                                                ft.MaterialState.DEFAULT: ft.colors.with_opacity(1, "#FFFFFF"),
-                                                                
-                                                            },
-                                                            bgcolor={
-                                                                ft.MaterialState.HOVERED: ft.colors.with_opacity(0.8, "#B7B3C1"),
-                                                                ft.MaterialState.DEFAULT: ft.colors.with_opacity(0.8, "#F0ECFB"),
-                                                            },
-                                                            padding={ft.MaterialState.HOVERED: 20},
-                                                            overlay_color=ft.colors.TRANSPARENT,
-                                                            elevation={"pressed": 0, "": 1},
-                                                            animation_duration=1000,
-                                                            # side={
-                                                            #     ft.MaterialState.DEFAULT: ft.BorderSide(1, ft.colors.BLUE),
-                                                            #     ft.MaterialState.HOVERED: ft.BorderSide(2, ft.colors.BLUE),
-                                                            # },
-                                                            shape={
-                                                                ft.MaterialState.HOVERED: ft.RoundedRectangleBorder(radius=15),
-                                                                ft.MaterialState.DEFAULT: ft.RoundedRectangleBorder(radius=15),
-                                                            },
-                                                        )
-                                                    ),
-                                                ],
-                                                alignment=ft.MainAxisAlignment.CENTER,
-                                            )
-                                            
-                                        ),
-                                        ft.Container(
-                                            ft.Row(
-                                                [
-                                                    ft.ElevatedButton(
-                                                        f"{tasks[current_task][2]}",
-                                                        on_click=lambda e: choose_answer(e, 2),
-                                                        width=210,
-                                                        height=40,
-                                                        style=ft.ButtonStyle(
-                                                            color={
-                                                                ft.MaterialState.HOVERED: ft.colors.with_opacity(1, "#FFFFFF"),
-                                                                ft.MaterialState.DEFAULT: ft.colors.with_opacity(1, "#FFFFFF"),
-                                                                
-                                                            },
-                                                            bgcolor={
-                                                                ft.MaterialState.HOVERED: ft.colors.with_opacity(0.8, "#B7B3C1"),
-                                                                ft.MaterialState.DEFAULT: ft.colors.with_opacity(0.8, "#F0ECFB"),
-                                                            },
-                                                            padding={ft.MaterialState.HOVERED: 20},
-                                                            overlay_color=ft.colors.TRANSPARENT,
-                                                            elevation={"pressed": 0, "": 1},
-                                                            animation_duration=1000,
-                                                            # side={
-                                                            #     ft.MaterialState.DEFAULT: ft.BorderSide(1, ft.colors.BLUE),
-                                                            #     ft.MaterialState.HOVERED: ft.BorderSide(2, ft.colors.BLUE),
-                                                            # },
-                                                            shape={
-                                                                ft.MaterialState.HOVERED: ft.RoundedRectangleBorder(radius=15),
-                                                                ft.MaterialState.DEFAULT: ft.RoundedRectangleBorder(radius=15),
-                                                            },
-                                                        )
-                                                    ),
-                                                ],
-                                                alignment=ft.MainAxisAlignment.CENTER,
-                                            )
-                                            
-                                        ),
-                                        ft.Container(
-                                            ft.Row(
-                                                [
-                                                    ft.ElevatedButton(
-                                                        f"{tasks[current_task][3]}",
-                                                        on_click=lambda e: choose_answer(e, 3),
-                                                        width=210,
-                                                        height=40,
-                                                        style=ft.ButtonStyle(
-                                                            color={
-                                                                ft.MaterialState.HOVERED: ft.colors.with_opacity(1, "#FFFFFF"),
-                                                                ft.MaterialState.DEFAULT: ft.colors.with_opacity(1, "#FFFFFF"),
-                                                                
-                                                            },
-                                                            bgcolor={
-                                                                ft.MaterialState.HOVERED: ft.colors.with_opacity(0.8, "#B7B3C1"),
-                                                                ft.MaterialState.DEFAULT: ft.colors.with_opacity(0.8, "#F0ECFB"),
-                                                            },
-                                                            padding={ft.MaterialState.HOVERED: 20},
-                                                            overlay_color=ft.colors.TRANSPARENT,
-                                                            elevation={"pressed": 0, "": 1},
-                                                            animation_duration=1000,
-                                                            # side={
-                                                            #     ft.MaterialState.DEFAULT: ft.BorderSide(1, ft.colors.BLUE),
-                                                            #     ft.MaterialState.HOVERED: ft.BorderSide(2, ft.colors.BLUE),
-                                                            # },
-                                                            shape={
-                                                                ft.MaterialState.HOVERED: ft.RoundedRectangleBorder(radius=15),
-                                                                ft.MaterialState.DEFAULT: ft.RoundedRectangleBorder(radius=15),
-                                                            },
-                                                        )
-                                                    ),
-                                                ],
-                                                alignment=ft.MainAxisAlignment.CENTER,
-                                            )
-                                            
-                                        ),
-                                        ft.Container(
-                                            ft.Row(
-                                                [
-                                                    ft.ElevatedButton(
-                                                        f"{tasks[current_task][4]}",
-                                                        on_click=lambda e: choose_answer(e, 4),
-                                                        width=210,
-                                                        height=40,
-                                                        style=ft.ButtonStyle(
-                                                            color={
-                                                                ft.MaterialState.HOVERED: ft.colors.with_opacity(1, "#FFFFFF"),
-                                                                ft.MaterialState.DEFAULT: ft.colors.with_opacity(1, "#FFFFFF"),
-                                                                
-                                                            },
-                                                            bgcolor={
-                                                                ft.MaterialState.HOVERED: ft.colors.with_opacity(0.8, "#B7B3C1"),
-                                                                ft.MaterialState.DEFAULT: ft.colors.with_opacity(0.8, "#F0ECFB"),
-                                                            },
-                                                            padding={ft.MaterialState.HOVERED: 20},
-                                                            overlay_color=ft.colors.TRANSPARENT,
-                                                            elevation={"pressed": 0, "": 1},
-                                                            animation_duration=1000,
-                                                            # side={
-                                                            #     ft.MaterialState.DEFAULT: ft.BorderSide(1, ft.colors.BLUE),
-                                                            #     ft.MaterialState.HOVERED: ft.BorderSide(2, ft.colors.BLUE),
-                                                            # },
-                                                            shape={
-                                                                ft.MaterialState.HOVERED: ft.RoundedRectangleBorder(radius=15),
-                                                                ft.MaterialState.DEFAULT: ft.RoundedRectangleBorder(radius=15),
-                                                            },
-                                                        )
-                                                    ),
-                                                ],
-                                                alignment=ft.MainAxisAlignment.CENTER,
-                                            )
-                                            
-                                        ),
-                                    ]
-                                ),
-                                width=328,
-                                height=576,
-                                bgcolor=ft.colors.with_opacity(0.9, "#825EEB"),
-                                border_radius=15,
-                                margin=ft.margin.only(top=100),
-                            )
-  
-                        ],
-                        alignment=ft.MainAxisAlignment.CENTER
-                    )
+                                        alignment=ft.alignment.center
+                                    ),
+                                    ft.Container(
+                                        ft.Row(
+                                            [
+                                                ft.ElevatedButton(
+                                                    f"{tasks[current_task][1]}",
+                                                    on_click=lambda e: choose_answer(e, 1),
+                                                    width=210,
+                                                    height=40,
+                                                    style=ft.ButtonStyle(
+                                                        color={
+                                                            ft.MaterialState.HOVERED: ft.colors.with_opacity(1, "#FFFFFF"),
+                                                            ft.MaterialState.DEFAULT: ft.colors.with_opacity(1, "#FFFFFF"),
+                                                            
+                                                        },
+                                                        bgcolor={
+                                                            ft.MaterialState.HOVERED: ft.colors.with_opacity(0.8, "#B7B3C1"),
+                                                            ft.MaterialState.DEFAULT: ft.colors.with_opacity(0.8, "#F0ECFB"),
+                                                        },
+                                                        padding={ft.MaterialState.HOVERED: 20},
+                                                        overlay_color=ft.colors.TRANSPARENT,
+                                                        elevation={"pressed": 0, "": 1},
+                                                        animation_duration=1000,
+                                                        # side={
+                                                        #     ft.MaterialState.DEFAULT: ft.BorderSide(1, ft.colors.BLUE),
+                                                        #     ft.MaterialState.HOVERED: ft.BorderSide(2, ft.colors.BLUE),
+                                                        # },
+                                                        shape={
+                                                            ft.MaterialState.HOVERED: ft.RoundedRectangleBorder(radius=15),
+                                                            ft.MaterialState.DEFAULT: ft.RoundedRectangleBorder(radius=15),
+                                                        },
+                                                    )
+                                                ),
+                                            ],
+                                            alignment=ft.MainAxisAlignment.CENTER,
+                                        )
+                                        
+                                    ),
+                                    ft.Container(
+                                        ft.Row(
+                                            [
+                                                ft.ElevatedButton(
+                                                    f"{tasks[current_task][2]}",
+                                                    on_click=lambda e: choose_answer(e, 2),
+                                                    width=210,
+                                                    height=40,
+                                                    style=ft.ButtonStyle(
+                                                        color={
+                                                            ft.MaterialState.HOVERED: ft.colors.with_opacity(1, "#FFFFFF"),
+                                                            ft.MaterialState.DEFAULT: ft.colors.with_opacity(1, "#FFFFFF"),
+                                                            
+                                                        },
+                                                        bgcolor={
+                                                            ft.MaterialState.HOVERED: ft.colors.with_opacity(0.8, "#B7B3C1"),
+                                                            ft.MaterialState.DEFAULT: ft.colors.with_opacity(0.8, "#F0ECFB"),
+                                                        },
+                                                        padding={ft.MaterialState.HOVERED: 20},
+                                                        overlay_color=ft.colors.TRANSPARENT,
+                                                        elevation={"pressed": 0, "": 1},
+                                                        animation_duration=1000,
+                                                        # side={
+                                                        #     ft.MaterialState.DEFAULT: ft.BorderSide(1, ft.colors.BLUE),
+                                                        #     ft.MaterialState.HOVERED: ft.BorderSide(2, ft.colors.BLUE),
+                                                        # },
+                                                        shape={
+                                                            ft.MaterialState.HOVERED: ft.RoundedRectangleBorder(radius=15),
+                                                            ft.MaterialState.DEFAULT: ft.RoundedRectangleBorder(radius=15),
+                                                        },
+                                                    )
+                                                ),
+                                            ],
+                                            alignment=ft.MainAxisAlignment.CENTER,
+                                        )
+                                        
+                                    ),
+                                    ft.Container(
+                                        ft.Row(
+                                            [
+                                                ft.ElevatedButton(
+                                                    f"{tasks[current_task][3]}",
+                                                    on_click=lambda e: choose_answer(e, 3),
+                                                    width=210,
+                                                    height=40,
+                                                    style=ft.ButtonStyle(
+                                                        color={
+                                                            ft.MaterialState.HOVERED: ft.colors.with_opacity(1, "#FFFFFF"),
+                                                            ft.MaterialState.DEFAULT: ft.colors.with_opacity(1, "#FFFFFF"),
+                                                            
+                                                        },
+                                                        bgcolor={
+                                                            ft.MaterialState.HOVERED: ft.colors.with_opacity(0.8, "#B7B3C1"),
+                                                            ft.MaterialState.DEFAULT: ft.colors.with_opacity(0.8, "#F0ECFB"),
+                                                        },
+                                                        padding={ft.MaterialState.HOVERED: 20},
+                                                        overlay_color=ft.colors.TRANSPARENT,
+                                                        elevation={"pressed": 0, "": 1},
+                                                        animation_duration=1000,
+                                                        # side={
+                                                        #     ft.MaterialState.DEFAULT: ft.BorderSide(1, ft.colors.BLUE),
+                                                        #     ft.MaterialState.HOVERED: ft.BorderSide(2, ft.colors.BLUE),
+                                                        # },
+                                                        shape={
+                                                            ft.MaterialState.HOVERED: ft.RoundedRectangleBorder(radius=15),
+                                                            ft.MaterialState.DEFAULT: ft.RoundedRectangleBorder(radius=15),
+                                                        },
+                                                    )
+                                                ),
+                                            ],
+                                            alignment=ft.MainAxisAlignment.CENTER,
+                                        )
+                                        
+                                    ),
+                                    ft.Container(
+                                        ft.Row(
+                                            [
+                                                ft.ElevatedButton(
+                                                    f"{tasks[current_task][4]}",
+                                                    on_click=lambda e: choose_answer(e, 4),
+                                                    width=210,
+                                                    height=40,
+                                                    style=ft.ButtonStyle(
+                                                        color={
+                                                            ft.MaterialState.HOVERED: ft.colors.with_opacity(1, "#FFFFFF"),
+                                                            ft.MaterialState.DEFAULT: ft.colors.with_opacity(1, "#FFFFFF"),
+                                                            
+                                                        },
+                                                        bgcolor={
+                                                            ft.MaterialState.HOVERED: ft.colors.with_opacity(0.8, "#B7B3C1"),
+                                                            ft.MaterialState.DEFAULT: ft.colors.with_opacity(0.8, "#F0ECFB"),
+                                                        },
+                                                        padding={ft.MaterialState.HOVERED: 20},
+                                                        overlay_color=ft.colors.TRANSPARENT,
+                                                        elevation={"pressed": 0, "": 1},
+                                                        animation_duration=1000,
+                                                        # side={
+                                                        #     ft.MaterialState.DEFAULT: ft.BorderSide(1, ft.colors.BLUE),
+                                                        #     ft.MaterialState.HOVERED: ft.BorderSide(2, ft.colors.BLUE),
+                                                        # },
+                                                        shape={
+                                                            ft.MaterialState.HOVERED: ft.RoundedRectangleBorder(radius=15),
+                                                            ft.MaterialState.DEFAULT: ft.RoundedRectangleBorder(radius=15),
+                                                        },
+                                                    )
+                                                ),
+                                            ],
+                                            alignment=ft.MainAxisAlignment.CENTER,
+                                        )
+                                        
+                                    ),
+                                ]
+                            ),
+                            width=328,
+                            height=576,
+                            bgcolor=ft.colors.with_opacity(0.9, "#825EEB"),
+                            border_radius=15,
+                            margin=ft.margin.only(top=100),
+                        )
+
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER
                 )
-             
+            )
+            taskspage.controls.append(
+                tasks_view
             )
             
         change_homepage(e)
@@ -427,7 +428,7 @@ def main(page: ft.Page):
             ft.Container(
                 ft.ElevatedButton(
                     text="START",
-                    on_click=open_close_tasks
+                    on_click=lambda e: open_close_tasks(e, 1)
                 ),
                 margin=100
             ),
