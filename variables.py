@@ -23,7 +23,7 @@ import random
 
 tasks = [
     [
-        [f"Concept {0}", f"(cos^2(a)) / (cos^2(a) - 1)"],
+        [f"Formulas", f"(cos^2(a)) / (cos^2(a) - 1)"],
         "-tg^2(a)",
         "-ctg^2(a)",
         "ctg(a)",
@@ -31,7 +31,7 @@ tasks = [
         2
     ],
     [
-        [f"Concept {0}", f"(1 - sin^2(a)) / (1 - cos^2(a))"],
+        [f"Trigonometry", f"(1 - sin^2(a)) / (1 - cos^2(a))"],
         "-ctg^2(a)",
         "tg^2(a)",
         "tg^2(a)",
@@ -78,13 +78,21 @@ tasks = [
         "0",
         1
     ],
+    [
+        [f"Formulas", "tg(a) + ctg(a)"],
+        "A",
+        "B",
+        "C",
+        "D",
+        2
+    ]
 ]
 
 
 concepts = [
     [
         "Formulas",
-        "Basice Formulas",
+        "Basic Formulas",
         [
             "sin (-a) = -sin a",
             "cos (-a) = cos a",

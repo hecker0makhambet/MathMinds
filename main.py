@@ -1,7 +1,7 @@
 import flet as ft
 
-from variables import tasks
-from variables import concepts
+from variables1 import tasks
+from variables1 import concepts
 
 elem = ft.Text("ABOBA")
 
@@ -10,6 +10,7 @@ username = "Makhambet"
 concepts_status = 0
 homepage_status = 0
 current_task = 0
+current_topic = 0
 score = 0
 errors = 0
 
@@ -21,7 +22,7 @@ def main(page: ft.Page):
         "Aclonica": "data\\Aclonica-Regular.ttf",
     }
     page.window_width = 390
-    page.window_height = 844
+    page.window_height = 750
     # page.window_resizable = False
     
     page.padding = 0
@@ -161,6 +162,7 @@ def main(page: ft.Page):
     def correct_choice(e):
         global score_label
         global current_task
+        global current_topic
         global score
         score += 1
         score_label.content = ft.Text(
@@ -168,8 +170,16 @@ def main(page: ft.Page):
             font_family="Aclonica"
         )
         current_task += 1
-        current_task %= len(tasks)
-        open_close_tasks(e, 0)
+        current_task %= len(tasks[current_topic][1])
+        if current_task == 0:
+            current_topic += 1
+            current_topic %= len(tasks)
+            if current_topic == 0:
+                open_close_tasks(e, 0, topics_closed=True)
+            else:    
+                open_close_tasks(e, 0, topic_closed=True)
+        else:
+            open_close_tasks(e, 0)
         page.update()
 
     def wrong_choice(e):
@@ -184,10 +194,10 @@ def main(page: ft.Page):
         page.update()
 
     def choose_answer(e, ans):
-        if ans == tasks[current_task][5]:
+        if ans == tasks[current_topic][1][current_task][-1]:
             page.dialog = ft.AlertDialog(
                 content=ft.Text(
-                    "VERY GOOD",
+                    "Correct!",
                     font_family="Aclonica"
                 ),
                 on_dismiss=correct_choice,
@@ -197,7 +207,7 @@ def main(page: ft.Page):
         else:
             page.dialog = ft.AlertDialog(
                 content=ft.Text(
-                    "NOT SO GOOD",
+                    "Incorrect! Try again!",
                     font_family="Aclonica"
                 ),
                 on_dismiss=wrong_choice,
@@ -205,10 +215,11 @@ def main(page: ft.Page):
             )
             page.update()
 
-    def open_close_tasks(e, num):
-        global homepage_status
-        homepage_status += num
-        # else:
+    def change_answer_text(e):
+        global answer_text
+        answer_text = e.control.value
+
+    def return_text_task():
         tasks_view = ft.Container(
             ft.Row(
                 [
@@ -223,7 +234,7 @@ def main(page: ft.Page):
                                 ),
                                 ft.Container(
                                     ft.Text(
-                                        f"{tasks[current_task][0][0]}",
+                                        f"{tasks[current_topic][1][current_task][1][0]}",
                                         font_family="Aclonica",
                                         color=ft.colors.with_opacity(1, "#FFFFFF"),
                                         size=36
@@ -232,7 +243,96 @@ def main(page: ft.Page):
                                 ),
                                 ft.Container(
                                     ft.Text(
-                                        f"{tasks[current_task][0][1]}",
+                                        f"{tasks[current_topic][1][current_task][1][1]}",
+                                        font_family="Aclonica",
+                                        color=ft.colors.with_opacity(1, "#FFFFFF"),
+                                        size=24
+                                    ),
+                                    alignment=ft.alignment.center
+                                ),
+                                ft.Container(
+                                    ft.TextField(
+                                        label="Your answer",
+                                        on_change=change_answer_text,
+                                    )
+                                ),
+                                ft.Container(
+                                    ft.Row(
+                                        [
+                                            ft.ElevatedButton(
+                                                f"Submit",
+                                                on_click=lambda e: choose_answer(e, answer_text),
+                                                width=210,
+                                                height=40,
+                                                style=ft.ButtonStyle(
+                                                    color={
+                                                        ft.MaterialState.HOVERED: ft.colors.with_opacity(1, "#FFFFFF"),
+                                                        ft.MaterialState.DEFAULT: ft.colors.with_opacity(1, "#FFFFFF"),
+                                                        
+                                                    },
+                                                    bgcolor={
+                                                        ft.MaterialState.HOVERED: ft.colors.with_opacity(0.8, "#B7B3C1"),
+                                                        ft.MaterialState.DEFAULT: ft.colors.with_opacity(0.8, "#F0ECFB"),
+                                                    },
+                                                    padding={ft.MaterialState.HOVERED: 20},
+                                                    overlay_color=ft.colors.TRANSPARENT,
+                                                    elevation={"pressed": 0, "": 1},
+                                                    animation_duration=1000,
+                                                    # side={
+                                                    #     ft.MaterialState.DEFAULT: ft.BorderSide(1, ft.colors.BLUE),
+                                                    #     ft.MaterialState.HOVERED: ft.BorderSide(2, ft.colors.BLUE),
+                                                    # },
+                                                    shape={
+                                                        ft.MaterialState.HOVERED: ft.RoundedRectangleBorder(radius=15),
+                                                        ft.MaterialState.DEFAULT: ft.RoundedRectangleBorder(radius=15),
+                                                    },
+                                                )
+                                            ),
+                                        ],
+                                        alignment=ft.MainAxisAlignment.CENTER,
+                                    )
+                                    
+                                )
+                            ]
+                        ),
+                        width=328,
+                        height=576,
+                        bgcolor=ft.colors.with_opacity(0.9, "#825EEB"),
+                        border_radius=15,
+                        margin=ft.margin.only(top=100),
+                    )
+
+                ],
+                alignment=ft.MainAxisAlignment.CENTER
+            )
+        )
+        return tasks_view
+
+    def return_test_task():
+        tasks_view = ft.Container(
+            ft.Row(
+                [
+                    ft.Container(
+                        ft.Column(
+                            [
+                                ft.Container(
+                                    ft.ElevatedButton(
+                                        "Get back to home",
+                                        on_click=lambda e: open_close_tasks(e, 1),
+                                    )
+                                ),
+                                ft.Container(
+                                    ft.Text(
+                                        f"{tasks[current_topic][1][current_task][1][0]}",
+                                        font_family="Aclonica",
+                                        color=ft.colors.with_opacity(1, "#FFFFFF"),
+                                        size=36
+                                    ),
+                                    alignment=ft.alignment.center
+                                ),
+                                ft.Container(
+                                    ft.Text(
+                                        f"{tasks[current_topic][1][current_task][1][1]}",
                                         font_family="Aclonica",
                                         color=ft.colors.with_opacity(1, "#FFFFFF"),
                                         size=24
@@ -243,7 +343,7 @@ def main(page: ft.Page):
                                     ft.Row(
                                         [
                                             ft.ElevatedButton(
-                                                f"{tasks[current_task][1]}",
+                                                f"{tasks[current_topic][1][current_task][2]}",
                                                 on_click=lambda e: choose_answer(e, 1),
                                                 width=210,
                                                 height=40,
@@ -280,7 +380,7 @@ def main(page: ft.Page):
                                     ft.Row(
                                         [
                                             ft.ElevatedButton(
-                                                f"{tasks[current_task][2]}",
+                                                f"{tasks[current_topic][1][current_task][3]}",
                                                 on_click=lambda e: choose_answer(e, 2),
                                                 width=210,
                                                 height=40,
@@ -317,7 +417,7 @@ def main(page: ft.Page):
                                     ft.Row(
                                         [
                                             ft.ElevatedButton(
-                                                f"{tasks[current_task][3]}",
+                                                f"{tasks[current_topic][1][current_task][4]}",
                                                 on_click=lambda e: choose_answer(e, 3),
                                                 width=210,
                                                 height=40,
@@ -354,7 +454,7 @@ def main(page: ft.Page):
                                     ft.Row(
                                         [
                                             ft.ElevatedButton(
-                                                f"{tasks[current_task][4]}",
+                                                f"{tasks[current_topic][1][current_task][5]}",
                                                 on_click=lambda e: choose_answer(e, 4),
                                                 width=210,
                                                 height=40,
@@ -400,7 +500,197 @@ def main(page: ft.Page):
                 alignment=ft.MainAxisAlignment.CENTER
             )
         )
-        taskspage.controls[-1] = tasks_view
+        return tasks_view
+
+    def return_matching_task():
+        pass
+
+    def return_topic_closed_message():
+        message = ft.Container(
+            ft.Row(
+                [
+                    ft.Container(
+                        ft.Column(
+                            [
+                                ft.Container(
+                                    ft.ElevatedButton(
+                                        "Get back to home",
+                                        on_click=lambda e: open_close_tasks(e, 1),
+                                    )
+                                ),
+                                ft.Container(
+                                    ft.Text(
+                                        f"You succesfully finished the topic {tasks[current_topic - 1][0]}",
+                                        font_family="Aclonica",
+                                        color=ft.colors.with_opacity(1, "#FFFFFF"),
+                                        size=36
+                                    ),
+                                    alignment=ft.alignment.center
+                                ),
+                                ft.Container(
+                                    ft.Text(
+                                        f"Now turn to the Concepts page to study new topic",
+                                        font_family="Aclonica",
+                                        color=ft.colors.with_opacity(1, "#FFFFFF"),
+                                        size=24
+                                    ),
+                                    alignment=ft.alignment.center
+                                ),
+                                ft.Container(
+                                    ft.Row(
+                                        [
+                                            ft.ElevatedButton(
+                                                f"OK",
+                                                on_click=lambda e: open_close_tasks(e, 1),
+                                                width=210,
+                                                height=40,
+                                                style=ft.ButtonStyle(
+                                                    color={
+                                                        ft.MaterialState.HOVERED: ft.colors.with_opacity(1, "#FFFFFF"),
+                                                        ft.MaterialState.DEFAULT: ft.colors.with_opacity(1, "#FFFFFF"),
+                                                        
+                                                    },
+                                                    bgcolor={
+                                                        ft.MaterialState.HOVERED: ft.colors.with_opacity(0.8, "#B7B3C1"),
+                                                        ft.MaterialState.DEFAULT: ft.colors.with_opacity(0.8, "#F0ECFB"),
+                                                    },
+                                                    padding={ft.MaterialState.HOVERED: 20},
+                                                    overlay_color=ft.colors.TRANSPARENT,
+                                                    elevation={"pressed": 0, "": 1},
+                                                    animation_duration=1000,
+                                                    # side={
+                                                    #     ft.MaterialState.DEFAULT: ft.BorderSide(1, ft.colors.BLUE),
+                                                    #     ft.MaterialState.HOVERED: ft.BorderSide(2, ft.colors.BLUE),
+                                                    # },
+                                                    shape={
+                                                        ft.MaterialState.HOVERED: ft.RoundedRectangleBorder(radius=15),
+                                                        ft.MaterialState.DEFAULT: ft.RoundedRectangleBorder(radius=15),
+                                                    },
+                                                )
+                                            ),
+                                        ],
+                                        alignment=ft.MainAxisAlignment.CENTER,
+                                    )
+                                    
+                                )
+                            ]
+                        ),
+                        width=328,
+                        height=576,
+                        bgcolor=ft.colors.with_opacity(0.9, "#825EEB"),
+                        border_radius=15,
+                        margin=ft.margin.only(top=100),
+                    )
+
+                ],
+                alignment=ft.MainAxisAlignment.CENTER
+            )
+        )
+        return message
+
+    def return_all_topics_closed_message():
+        message = ft.Container(
+            ft.Row(
+                [
+                    ft.Container(
+                        ft.Column(
+                            [
+                                ft.Container(
+                                    ft.ElevatedButton(
+                                        "Get back to home",
+                                        on_click=lambda e: open_close_tasks(e, 1),
+                                    )
+                                ),
+                                ft.Container(
+                                    ft.Text(
+                                        f"Congratulations! You succesfully completed the entire course of MathMinds program",
+                                        font_family="Aclonica",
+                                        color=ft.colors.with_opacity(1, "#FFFFFF"),
+                                        size=24
+                                    ),
+                                    alignment=ft.alignment.center
+                                ),
+                                ft.Container(
+                                    ft.Text(
+                                        f"We regularly update our topics so that you could improve your math knowledge",
+                                        font_family="Aclonica",
+                                        color=ft.colors.with_opacity(1, "#FFFFFF"),
+                                        size=24
+                                    ),
+                                    alignment=ft.alignment.center
+                                ),
+                                ft.Container(
+                                    ft.Text(
+                                        f"We will keep in touch soon",
+                                        font_family="Aclonica",
+                                        color=ft.colors.with_opacity(1, "#FFFFFF"),
+                                        size=24
+                                    ),
+                                    alignment=ft.alignment.center
+                                ),
+                                ft.Container(
+                                    ft.Row(
+                                        [
+                                            ft.ElevatedButton(
+                                                f"OK",
+                                                on_click=lambda e: open_close_tasks(e, 1),
+                                                width=210,
+                                                height=40,
+                                                style=ft.ButtonStyle(
+                                                    color={
+                                                        ft.MaterialState.HOVERED: ft.colors.with_opacity(1, "#FFFFFF"),
+                                                        ft.MaterialState.DEFAULT: ft.colors.with_opacity(1, "#FFFFFF"),
+                                                        
+                                                    },
+                                                    bgcolor={
+                                                        ft.MaterialState.HOVERED: ft.colors.with_opacity(0.8, "#B7B3C1"),
+                                                        ft.MaterialState.DEFAULT: ft.colors.with_opacity(0.8, "#F0ECFB"),
+                                                    },
+                                                    padding={ft.MaterialState.HOVERED: 20},
+                                                    overlay_color=ft.colors.TRANSPARENT,
+                                                    elevation={"pressed": 0, "": 1},
+                                                    animation_duration=1000,
+                                                    # side={
+                                                    #     ft.MaterialState.DEFAULT: ft.BorderSide(1, ft.colors.BLUE),
+                                                    #     ft.MaterialState.HOVERED: ft.BorderSide(2, ft.colors.BLUE),
+                                                    # },
+                                                    shape={
+                                                        ft.MaterialState.HOVERED: ft.RoundedRectangleBorder(radius=15),
+                                                        ft.MaterialState.DEFAULT: ft.RoundedRectangleBorder(radius=15),
+                                                    },
+                                                )
+                                            ),
+                                        ],
+                                        alignment=ft.MainAxisAlignment.CENTER,
+                                    )
+                                    
+                                )
+                            ]
+                        ),
+                        width=328,
+                        height=576,
+                        bgcolor=ft.colors.with_opacity(0.9, "#825EEB"),
+                        border_radius=15,
+                        margin=ft.margin.only(top=100),
+                    )
+
+                ],
+                alignment=ft.MainAxisAlignment.CENTER
+            )
+        )
+        return message
+    
+    def open_close_tasks(e, num, topic_closed=False, topics_closed=False):
+        global homepage_status
+        homepage_status += num
+        if topics_closed:
+            taskspage.controls[-1] = return_all_topics_closed_message()
+        elif topic_closed:
+            taskspage.controls[-1] = return_topic_closed_message()
+        elif tasks[current_topic][1][current_task][0] == 'test':
+            taskspage.controls[-1] = return_test_task()
+        elif tasks[current_topic][1][current_task][0] == 'text':
+            taskspage.controls[-1] = return_text_task()
             
         change_homepage(e)
 
@@ -587,7 +877,7 @@ def main(page: ft.Page):
                                     text="START",
                                     on_click=lambda e: open_close_tasks(e, 1)
                                 ),
-                                margin=100
+                                margin=50
                             ),
                         ],
                         alignment=ft.MainAxisAlignment.CENTER
